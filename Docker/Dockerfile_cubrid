@@ -1,0 +1,51 @@
+FROM local/c7-systemd
+
+RUN yum update -y
+RUN yum install -y sudo openssh-clients openssh-server
+RUN yum install -y bc bind-utils crontabs file net-tools traceroute
+RUN yum install -y rdate unzip vim-enhanced wget which zip
+RUN yum install -y expect telnet nc
+RUN yum install -y java-1.7.0-openjdk-devel java-1.8.0-openjdk-devel
+RUN yum clean all
+RUN systemctl enable sshd.service
+
+RUN useradd cubrid
+
+RUN sed -e 102s/#\ %wheel/%wheel/g -i /etc/sudoers
+RUN sed s/wheel:x:10:/wheel:x:10:cubrid/g -i /etc/group
+
+COPY INSTALL/limits.conf /etc/security/limits.conf
+COPY INSTALL/20-nproc.conf /etc/security/limits.d/20-nproc.conf
+
+ENV CUBRID=/home/cubrid/CUBRID
+ENV CUBRID_DATABASES=$CUBRID/databases
+ENV LD_LIBRARY_PATH=$CUBRID/lib
+ENV PATH=$CUBRID/bin:$PATH
+ENV TMPDIR=$CUBRID/tmp
+ENV CUBRID_TMP=$CUBRID/var/CUBRID_SOCK
+ENV JAVA_HOME=/usr/lib/jvm/java
+ENV PATH=$JAVA_HOME/bin:$PATH
+ENV CLASSPATH=. 
+ENV LD_LIBRARY_PATH=$JAVA_HOME/jre/lib/amd64:$JAVA_HOME/jre/lib/amd64/server:$LD_LIBRARY_PATH
+
+COPY ENV/cubrid.sh /home/cubrid/cubrid.sh
+RUN echo -e "\n. /home/cubrid/cubrid.sh" >> /home/cubrid/.bash_profile
+
+COPY INSTALL/CUBRID-10.1.1.7691-47d2437-Linux.x86_64.tar.gz /home/cubrid/CUBRID-10.1.1.7691-47d2437-Linux.x86_64.tar.gz
+RUN tar -zxvf /home/cubrid/CUBRID-10.1.1.7691-47d2437-Linux.x86_64.tar.gz -C /home/cubrid
+RUN mkdir -p /home/cubrid/CUBRID/databases
+RUN mkdir -p /home/cubrid/CUBRID/tmp
+RUN mkdir -p /home/cubrid/CUBRID/var/CUBRID_SOCK/
+
+COPY CONF/cubrid.conf_512M $CUBRID/conf/cubrid.conf_512M
+COPY CONF/cubrid.conf_1.5G $CUBRID/conf/cubrid.conf_1.5G
+COPY CONF/cubrid.conf_2.5G $CUBRID/conf/cubrid.conf_2.5G
+COPY CONF/cubrid.conf_4.5G $CUBRID/conf/cubrid.conf_4.5G
+COPY CONF/cubrid_broker.conf_5-40 $CUBRID/conf/cubrid_broker.conf_5-40
+COPY CONF/cubrid_broker.conf_20-80 $CUBRID/conf/cubrid_broker.conf_20-80
+
+RUN chown -R cubrid. /home/cubrid
+
+EXPOSE 22 8001 30000 33000
+
+CMD ["/usr/sbin/init"]

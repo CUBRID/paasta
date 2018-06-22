@@ -1,0 +1,1 @@
+docker build -f Dockerfile_cubrid --rm -t local/cubrid .

@@ -1,0 +1,1 @@
+docker build -f Dockerfile_c7-systemd --rm -t local/c7-systemd .
