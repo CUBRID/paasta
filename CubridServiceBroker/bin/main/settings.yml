@@ -1,0 +1,62 @@
+services:
+- id: cubrid
+  name: CUBRID DB
+  description: CUBRID is engineered as a completely free, open-source relational database management engine, with built-in enterprise grade features.
+  bindable: true
+  tags:
+    - cubrid
+    - opensource
+  metadata:
+  - displayName: CUBRID DB
+    imageUrl: http://www.cubrid.com/files/attach/images/3771164/522cf9a9415e01599545be25bfd8eab3.png
+    longDescription: CUBRID is engineered as a completely free, open-source relational database management engine, with built-in enterprise grade features. It provides unique powerful features, such as object oriented database elements relations, data sharding, a native middleware broker, high performance data caching, customizable and extendible globalization support. Not the least, it provides a high level of SQL compatibility with MySQL and other known databases.
+    providerDisplayName: CUBRID
+    documentationUrl: https://www.cubrid.org/documentation/manuals
+    supportUrl: http://www.cubrid.com
+  requires:
+    - Windows 32/64 Bit XP, 2003, Vista, Windows 7
+    - Linux family 32/64 Bit(Linux kernel 2.4, glibc 2.3.4 or higher
+    - Requires a 500 MB of free disk space on the initial installation; requires approximately 1.5 GB of free disk space with a database creating with default options.
+    - JRE/JDK 1.6 or higher (Required when Java Stored Procedure is required
+  planUpdatable: false
+  plans:
+    - id: standard
+      name: Standard
+      description: CUBRID Standard Plan
+      metadata:
+        bullets:
+          - CUBRID Standard Plan
+        costs:
+          amount:
+            won: 200000
+          unit: MONTHLY
+        displayName: CUBRID Standard Plan
+      free: false
+    - id: enterprise
+      name: Enterprise
+      description: CUBRID Enterprise Plan
+      metadata:
+        bullets:
+          - CUBRID Enterprise Plan
+        costs:
+          amount:
+            won: 300000
+          unit: MONTHLY
+        displayName: CUBRID Enterprise Plan
+      free: false
+    - id: premium
+      name: Premium
+      description: CUBRID Premium Plan
+      metadata:
+        bullets:
+          - CUBRID Premium Plan
+        costs:
+          amount:
+            won: 400000
+          unit: MONTHLY
+        displayName: CUBRID Premium Plan
+      free: false
+  dashboard_client:
+  - id: null
+    secret: null
+    redirect_uri: null
